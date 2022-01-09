@@ -5,6 +5,7 @@ A wrapper over resume.py for managing multiple job applications.
 """
 
 # Library Imports
+import re
 import os
 import sys
 import shutil
@@ -12,6 +13,7 @@ import pathlib
 import requests
 import argparse
 import subprocess
+from bs4 import BeautifulSoup
 
 # Globals
 PARENT_DIR = pathlib.Path(__file__).parent.absolute()
@@ -52,13 +54,21 @@ def yoink_job_page(target_path, job_link):
     # Save the link in one file
     link_path = os.path.join(target_path, 'posting_link.txt')
     with open(link_path, 'w') as f:
-        f.write(link_path)
+        f.write(job_link)
 
     # Save the web page in another file
     page_data = requests.get(job_link).text
-    output_path = os.path.join(target_path, 'job_posting.html')
-    with open(output_path, 'w') as f:
+    raw_output_path = os.path.join(target_path, 'job_posting_raw.html')
+    with open(raw_output_path, 'w') as f:
         f.write(page_data)
+
+    # Attempt to extract text elements only from the page
+    soup = BeautifulSoup(page_data, 'html.parser')
+    page = soup.getText()
+    page = re.sub(r'\n+', '\n', page)
+    output_path = os.path.join(target_path, 'job_posting.txt')
+    with open(output_path, 'w') as f:
+        f.write(page)
 
 
 def main(resume_name, job_link):
