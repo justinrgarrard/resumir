@@ -17,7 +17,8 @@ from bs4 import BeautifulSoup
 
 # Globals
 PARENT_DIR = pathlib.Path(__file__).parent.absolute()
-JOB_APP_TEMPLATE_PATH = os.path.join(PARENT_DIR, 'job_app_template')
+JOB_APP_DIR_PATH = os.path.join(PARENT_DIR, 'applications')
+TEMPLATE_DIR_PATH = os.path.join(PARENT_DIR, 'job_app_template')
 PYTHON = sys.executable
 
 
@@ -81,13 +82,13 @@ def main(job_app_name, job_link):
     Create or update a job application directory.
     """
     # Check if the job application exists
-    target_path = os.path.join(PARENT_DIR, job_app_name)
+    target_path = os.path.join(JOB_APP_DIR_PATH, job_app_name)
     job_app_exists = os.path.isdir(target_path)
 
     # Copy the template directory if the job app doesn't exist
     if not job_app_exists:
         print('---Job App Does Not Exist | Creating Job App---')
-        shutil.copytree(JOB_APP_TEMPLATE_PATH, target_path)
+        shutil.copytree(TEMPLATE_DIR_PATH, target_path)
         print('---Job App Created---')
 
     # Compile the Job App

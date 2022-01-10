@@ -23,7 +23,7 @@ CompletedProcess(args='/usr/bin/python3 /home/roy/vcs/resumir/hadoop_developer_g
 2. ***Tweak the [Resume](resume_template/README.md)***
 
 ```
-$ cd hadoop_developer_general_motors
+$ cd applications/hadoop_developer_general_motors
 .
 ├── cover_letter.css        EDIT THIS to change cover letter styling
 ├── cover_letter.md         EDIT THIS to change cover letter contents
