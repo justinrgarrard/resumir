@@ -19,6 +19,7 @@ from bs4 import BeautifulSoup
 PARENT_DIR = pathlib.Path(__file__).parent.absolute()
 JOB_APP_DIR_PATH = os.path.join(PARENT_DIR, 'applications')
 TEMPLATE_DIR_PATH = os.path.join(PARENT_DIR, 'job_app_template')
+REJECT_APP_DIR_PATH = os.path.join(PARENT_DIR, 'rejected')
 PYTHON = sys.executable
 
 
@@ -35,6 +36,12 @@ def parse_args():
         "-j",
         "--job_link",
         help="A web address of the job posting, to be scraped and saved."
+    )
+    parser.add_argument(
+        "-r",
+        "--rejected",
+        action='store_true',
+        help="If the job application exists, move it to the rejected pile."
     )
     args = parser.parse_args()
     return args
@@ -77,7 +84,7 @@ def yoink_job_page(target_path, job_link):
         f.write(page)
 
 
-def main(job_app_name, job_link):
+def main(job_app_name, job_link, rejected):
     """
     Create or update a job application directory.
     """
@@ -85,24 +92,34 @@ def main(job_app_name, job_link):
     target_path = os.path.join(JOB_APP_DIR_PATH, job_app_name)
     job_app_exists = os.path.isdir(target_path)
 
-    # Copy the template directory if the job app doesn't exist
-    if not job_app_exists:
-        print('---Job App Does Not Exist | Creating Job App---')
-        shutil.copytree(TEMPLATE_DIR_PATH, target_path)
-        print('---Job App Created---')
+    # If the rejected flag is true, discard the job app if it exists
+    if rejected is True:
+        if job_app_exists:
+            print('---Moving Job App to Rejected---')
+            shutil.move(target_path, REJECT_APP_DIR_PATH)
+            print('---Job App Moved---')
+        else:
+            print('---No Such Job App Found---')
 
-    # Compile the Job App
-    print('---Job App Exists | Updating Job App---')
-    update_job_app_dir(target_path)
-    print('---Job App Updated---')
+    else:
+        # Copy the template directory if the job app doesn't exist
+        if not job_app_exists:
+            print('---Job App Does Not Exist | Creating Job App---')
+            shutil.copytree(TEMPLATE_DIR_PATH, target_path)
+            print('---Job App Created---')
 
-    # If a job link is provided, yoink the web page and save it
-    if job_link is not None:
-        print('---Collecting Job Posting---')
-        yoink_job_page(target_path, job_link)
-        print('---Job Posting Collected---')
+        # Compile the Job App
+        print('---Job App Exists | Updating Job App---')
+        update_job_app_dir(target_path)
+        print('---Job App Updated---')
+
+        # If a job link is provided, yoink the web page and save it
+        if job_link is not None:
+            print('---Collecting Job Posting---')
+            yoink_job_page(target_path, job_link)
+            print('---Job Posting Collected---')
 
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.job_app_name, args.job_link)
+    main(args.job_app_name, args.job_link, args.rejected)
