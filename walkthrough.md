@@ -4,8 +4,18 @@
 
 ```
 $ python resumir.py hadoop_developer_general_motors -j https://www.somelink.com
----Resume Does Not Exist | Creating Resume---
----Resume Created---
+---Job App Does Not Exist | Creating Job App---
+---Job App Created---
+---Job App Exists | Updating Job App---
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.html
+Found Chrome or Chromium at /usr/bin/google-chrome
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.pdf
+CompletedProcess(args='/usr/bin/python3 /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.py /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.md', returncode=0)
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.html
+Found Chrome or Chromium at /usr/bin/google-chrome
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.pdf
+CompletedProcess(args='/usr/bin/python3 /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.py /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.md', returncode=0)
+---Job App Updated---
 ---Collecting Job Posting---
 ---Job Posting Collected---
 ```
@@ -14,29 +24,34 @@ $ python resumir.py hadoop_developer_general_motors -j https://www.somelink.com
 
 ```
 $ cd hadoop_developer_general_motors
-
 .
-├── job_posting.html        
+├── cover_letter.css        EDIT THIS to change cover letter styling
+├── cover_letter.md         EDIT THIS to change cover letter contents
+├── job_posting.html   
+├── posting_link.txt     
 ├── LICENSE
-├── posting_link.txt        
 ├── README.md
-├── resume.css              EDIT THIS: The style of the resume.
+├── resume.css              EDIT THIS to change resume styling
 ├── resume.html
-├── resume.md               EDIT THIS: The body of the resume.
+├── resume.md               EDIT THIS to change resume contents
 ├── resume.pdf
 ├── resume.png
 └── resume.py
 ```
 
-3. ***Regenerate the PDF***
+3. ***Regenerate the PDF's***
 
 ```
 $ python resumir.py hadoop_general_motors
 
----Resume Exists | Updating Resume---
+---Job App Exists | Updating Job App---
 Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.html
 Found Chrome or Chromium at /usr/bin/google-chrome
 Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.pdf
 CompletedProcess(args='/usr/bin/python3 /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.py /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.md', returncode=0)
----Resume Updated---
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.html
+Found Chrome or Chromium at /usr/bin/google-chrome
+Wrote /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.pdf
+CompletedProcess(args='/usr/bin/python3 /home/roy/vcs/resumir/hadoop_developer_general_motors/resume.py /home/roy/vcs/resumir/hadoop_developer_general_motors/cover_letter.md', returncode=0)
+---Job App Updated---
 ```

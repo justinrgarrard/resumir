@@ -17,7 +17,7 @@ from bs4 import BeautifulSoup
 
 # Globals
 PARENT_DIR = pathlib.Path(__file__).parent.absolute()
-RESUME_TEMPLATE_PATH = os.path.join(PARENT_DIR, 'resume_template')
+JOB_APP_TEMPLATE_PATH = os.path.join(PARENT_DIR, 'job_app_template')
 PYTHON = sys.executable
 
 
@@ -27,8 +27,8 @@ def parse_args():
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "resume_name",
-        help="An identifier used as the directory name for the new resume."
+        "job_app_name",
+        help="An identifier used as the directory name for the new job application."
     )
     parser.add_argument(
         "-j",
@@ -39,11 +39,16 @@ def parse_args():
     return args
 
 
-def update_resume_dir(target_path):
+def update_job_app_dir(target_path):
     """
-    Update a resume directory.
+    Update a job application directory.
     """
+    # Update the resume
     cmd = f'{PYTHON} {target_path}/resume.py {target_path}/resume.md'
+    print(subprocess.run(cmd, shell=True, check=True))
+
+    # Update the cover letter
+    cmd = f'{PYTHON} {target_path}/resume.py {target_path}/cover_letter.md'
     print(subprocess.run(cmd, shell=True, check=True))
 
 
@@ -71,25 +76,24 @@ def yoink_job_page(target_path, job_link):
         f.write(page)
 
 
-def main(resume_name, job_link):
+def main(job_app_name, job_link):
     """
-    Create or update a resume directory.
+    Create or update a job application directory.
     """
-    # Check if the resume exists
-    target_path = os.path.join(PARENT_DIR, resume_name)
-    resume_exists = os.path.isdir(target_path)
+    # Check if the job application exists
+    target_path = os.path.join(PARENT_DIR, job_app_name)
+    job_app_exists = os.path.isdir(target_path)
 
-    # Rebuild the resume if it exists
-    if resume_exists:
-        print('---Resume Exists | Updating Resume---')
-        update_resume_dir(target_path)
-        print('---Resume Updated---')
+    # Copy the template directory if the job app doesn't exist
+    if not job_app_exists:
+        print('---Job App Does Not Exist | Creating Job App---')
+        shutil.copytree(JOB_APP_TEMPLATE_PATH, target_path)
+        print('---Job App Created---')
 
-    # Copy the template directory if the resume doesn't exist
-    else:
-        print('---Resume Does Not Exist | Creating Resume---')
-        shutil.copytree(RESUME_TEMPLATE_PATH, target_path)
-        print('---Resume Created---')
+    # Compile the Job App
+    print('---Job App Exists | Updating Job App---')
+    update_job_app_dir(target_path)
+    print('---Job App Updated---')
 
     # If a job link is provided, yoink the web page and save it
     if job_link is not None:
@@ -100,4 +104,4 @@ def main(resume_name, job_link):
 
 if __name__ == '__main__':
     args = parse_args()
-    main(args.resume_name, args.job_link)
+    main(args.job_app_name, args.job_link)
